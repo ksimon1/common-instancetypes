@@ -245,6 +245,17 @@ Specific characteristics of this series are:
 To get started with customizing or creating your own instancetypes and preferences
 see [DEVELOPMENT.md](./DEVELOPMENT.md).
 
+### Dependency updates
+
+Renovate runs daily at 06:00 UTC and can also be started from the Actions tab. It updates the Go
+modules in `tests/` and `tools/` and the GitHub Actions workflows. It refreshes the modules' vendored
+dependencies automatically. Routine updates target `main`; `release-1.5` through `release-1.8`
+receive security updates only. Direct major Go updates require approval in the dependency dashboard.
+
+To enable the workflow, install the Renovate GitHub App with `contents:write`, `pull-requests:write`,
+`issues:write`, `workflows:write`, and `dependabot-alerts:read` permissions. Configure its ID and
+private key as the `RENOVATE_APP_ID` and `RENOVATE_APP_PRIVATE_KEY` Actions secrets.
+
 ## Resources
 
 The following instancetype resources (cluster-wide and namespaced) are

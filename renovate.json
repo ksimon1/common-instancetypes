@@ -1,0 +1,60 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "baseBranchPatterns": ["main", "release-1.5", "release-1.6", "release-1.7", "release-1.8"],
+  "enabledManagers": ["gomod", "github-actions"],
+  "prConcurrentLimit": 3,
+  "lockFileMaintenance": {
+    "enabled": false
+  },
+  "postUpdateOptions": ["gomodTidy"],
+  "labels": ["release-note-none"],
+  "extends": [":gitSignOff", ":dependencyDashboard"],
+  "packageRules": [
+    {
+      "description": "Enable indirect Go dependency updates",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["indirect"],
+      "enabled": true
+    },
+    {
+      "description": "Keep Go updates compatible with each module's Go version",
+      "matchManagers": ["gomod"],
+      "constraintsFiltering": "strict"
+    },
+    {
+      "description": "Group Go digest, patch, and minor updates",
+      "matchManagers": ["gomod"],
+      "groupName": "all dependencies",
+      "matchUpdateTypes": ["digest", "patch", "minor"],
+      "enabled": true
+    },
+    {
+      "description": "Request approval for direct major Go updates",
+      "matchManagers": ["gomod"],
+      "groupName": "major dependencies",
+      "matchUpdateTypes": ["major"],
+      "matchDepTypes": ["require"],
+      "dependencyDashboardApproval": true,
+      "postUpdateOptions": ["gomodUpdateImportPaths"]
+    },
+    {
+      "description": "Disable major indirect Go updates",
+      "matchManagers": ["gomod"],
+      "matchUpdateTypes": ["major"],
+      "matchDepTypes": ["indirect"],
+      "enabled": false
+    },
+    {
+      "description": "Disable routine updates on release branches; vulnerability alerts override this",
+      "matchBaseBranches": ["release-1.5", "release-1.6", "release-1.7", "release-1.8"],
+      "matchPackageNames": ["*"],
+      "enabled": false
+    }
+  ],
+  "vulnerabilityAlerts": {
+    "enabled": true
+  },
+  "osvVulnerabilityAlerts": true,
+  "separateMajorMinor": true,
+  "ignorePaths": ["**/vendor/**"]
+}
